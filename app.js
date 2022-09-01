@@ -37,15 +37,24 @@ let imgArray = [bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthul
 
 let imgSpot = document.getElementById('imgSpot');
 let listSpot = document.getElementById('list');
-let y = 0      
+let buttonSpot = document.getElementById('button');
+let chartSpot = document.getElementById('chart')
+let y = 0      ;
 
 
 function showResults () {
+    listSpot.innerHTML = ''
     for (let j = 0; j < imgArray.length; j++) {
         let createList = document.createElement('li');
         createList.textContent = imgArray[j].imgName +' was shown: ' + imgArray[j].timesShown + ' and clicked: ' + imgArray[j].timesClicked + ' times';
         listSpot.appendChild(createList);
     }
+}
+
+function myChart () {
+    createChart = document.createElement('canvas');
+    chartSpot.appendChild(createChart);
+    console.log('yes')
 }
 
 
@@ -65,12 +74,12 @@ function displayImg () {
             imgArray[x].timesClicked++
             imgSpot.innerHTML = ''; 
             y++  
-            if (y > 2) {
+            if (y == 2) {
                 let makeButton = document.createElement('button');
                 makeButton.innerHTML = 'Results';
-                listSpot.appendChild(makeButton);
+                buttonSpot.appendChild(makeButton);
                 let getButton = document.querySelector('button');
-                getButton.addEventListener('click', showResults);
+                getButton.addEventListener('click', showResults, myChart);
 
             }
             displayImg();  
