@@ -1,7 +1,5 @@
 'use strict' ;
 
-//  put 3 imgs from assests into <main> with clickable functionality, after clicking on one it displays another random set of 3, 25 times, clicking on a specific img logs each specific picture clicked, then displays a list of img filenames and the amount of times chosen
-
 // queryselector?
 
 // constructor Function
@@ -36,16 +34,24 @@ let wineglass = new Imgobject ('wineglass','assets/wine-glass.jpg');
 // img object array
 let imgArray = [bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dogduck, dragon, pen, petsweep, scissors, shark, sweep, tauntaun, unicorn, watercan, wineglass];
 
-// random number generator
-
-
 
 let imgSpot = document.getElementById('imgSpot');
+let listSpot = document.getElementById('list');
+let y = 0      
+
+
+function showResults () {
+    for (let j = 0; j < imgArray.length; j++) {
+        let createList = document.createElement('li');
+        createList.textContent = imgArray[j].imgName +' was shown: ' + imgArray[j].timesShown + ' and clicked: ' + imgArray[j].timesClicked + ' times';
+        listSpot.appendChild(createList);
+    }
+}
 
 
 
 
-function round2 () {
+function displayImg () {
     for (let i = 0; i < 3; i++) {
         let x = Math.floor((Math.random() * (imgArray.length)));
         let addImg = document.createElement('input');
@@ -57,14 +63,27 @@ function round2 () {
         let getImgId = document.getElementById(imgArray[x].imgName);
         getImgId.addEventListener('click', function() {
             imgArray[x].timesClicked++
-            imgSpot.innerHTML = '';
-            round2()
-        }); 
+            imgSpot.innerHTML = ''; 
+            y++  
+            if (y > 2) {
+                let makeButton = document.createElement('button');
+                makeButton.innerHTML = 'Results';
+                listSpot.appendChild(makeButton);
+                let getButton = document.querySelector('button');
+                getButton.addEventListener('click', showResults);
+
+            }
+            displayImg();  
+        });
+        
+
     }
 }
 
-round2();
 
+
+
+displayImg()
 // make a button that shows a list of results of pictures times clicked, and number of times shown
 
 
