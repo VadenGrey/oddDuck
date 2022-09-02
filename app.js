@@ -37,10 +37,13 @@ let imgArray = [bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthul
 
 let imgSpot = document.getElementById('imgSpot');
 let listSpot = document.getElementById('list');
-let y = 0      
+let buttonSpot = document.getElementById('button');
+let chartSpot = document.getElementById('chart')
+let y = 0      ;
 
 
 function showResults () {
+    listSpot.innerHTML = ''
     for (let j = 0; j < imgArray.length; j++) {
         let createList = document.createElement('li');
         createList.textContent = imgArray[j].imgName +' was shown: ' + imgArray[j].timesShown + ' and clicked: ' + imgArray[j].timesClicked + ' times';
@@ -48,43 +51,96 @@ function showResults () {
     }
 }
 
+function myChart () {
+    let createChart = document.getElementById('chart').getContext('2d');
+    let chartLabels = [];
+    let chartViews = {
+        label: 'Times shown',
+        data: [],
+        backgroundColor: ["red"],
+    };
+    let chartClicks = {
+        label: 'Times clicked',
+        data: [],
+        backgroundColor: ["blue"],
+    };
 
+    for (let i = 0; i < imgArray.length; i++) {
+        chartLabels[i] = imgArray[i].imgName;
+        chartViews.data[i] = imgArray[i].timesShown;
+        chartClicks.data[i] = imgArray[i].timesClicked;
+    };
 
+    let myChart = new Chart(createChart, {
+        type: 'bar',
+        data: {
+            labels: chartLabels,
+            datasets: [
+                chartViews,
+                chartClicks,
+            ],
+        },
+        options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+    });
 
-function displayImg () {
-    for (let i = 0; i < 3; i++) {
-        let x = Math.floor((Math.random() * (imgArray.length)));
-        let addImg = document.createElement('input');
-        addImg.id = imgArray[x].imgName;
-        addImg.type = 'button';
-        addImg.style = 'background: url('+imgArray[x].filePath+')';
-        imgSpot.appendChild(addImg);
-        imgArray[x].timesShown++;
-        let getImgId = document.getElementById(imgArray[x].imgName);
-        getImgId.addEventListener('click', function() {
-            imgArray[x].timesClicked++
-            imgSpot.innerHTML = ''; 
-            y++  
-            if (y > 2) {
-                let makeButton = document.createElement('button');
-                makeButton.innerHTML = 'Results';
-                listSpot.appendChild(makeButton);
-                let getButton = document.querySelector('button');
-                getButton.addEventListener('click', showResults);
-
-            }
-            displayImg();  
-        });
-        
-
-    }
+    // chartSpot.appendChild(createChart);
+    console.log(myChart);
 }
 
 
+function randNumb () {
+    return Math.floor((Math.random() * (imgArray.length)));
+}
 
+// repeatImg.length = 0;
+
+
+function displayImg () {
+    let x = -1;
+    let repeatImg = [];
+    for (let i = 0; i < 3; i++) {
+        x++
+        let imgNumb = randNumb()
+        // while (imgNumb == repeatImg[0] || imgNumb == repeatImg[1]) {
+        //     let imgNumb = randNumb();
+        // }
+        // repeatImg.push(imgNumb);
+        let addImg = document.createElement('button');
+        addImg.innerHTML = '<img src=' + imgArray[imgNumb].filePath + '>';
+        addImg.id = imgNumb;
+        imgSpot.appendChild(addImg);
+        imgArray[imgNumb].timesShown++;
+        let getImgId = document.getElementById(imgNumb);
+        getImgId.addEventListener('click', function() {
+            imgArray[imgNumb].timesClicked++
+            imgSpot.innerHTML = ''; 
+            y++;  
+            displayImg();  
+        })
+    }
+    if (y == 2) { // shows results in list form
+    let makeButton = document.createElement('button');
+    makeButton.innerHTML = 'Results';
+    makeButton.id = 'results'
+    buttonSpot.appendChild(makeButton);
+    let getButton = document.querySelector('#button');
+    getButton.addEventListener('click', function () {
+        showResults();
+        myChart();
+    });
+
+    };
+        
+}
 
 displayImg()
-// make a button that shows a list of results of pictures times clicked, and number of times shown
+
 
 
 
