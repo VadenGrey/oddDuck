@@ -20,7 +20,7 @@ let bubblegum = new Imgobject ('bubblegum', 'assets/bubblegum.jpg');
 let chair = new Imgobject ('chair','assets/chair.jpg');
 let cthulhu = new Imgobject ('cthulhu','assets/cthulhu.jpg');
 let dogduck = new Imgobject ('dogduck','assets/dog-duck.jpg');
-let dragon = new Imgobject ('dragon','assets/bag.jpg');
+let dragon = new Imgobject ('dragon','assets/dragon.jpg');
 let pen = new Imgobject ('pen','assets/pen.jpg');
 let petsweep = new Imgobject ('petsweep','assets/pet-sweep.jpg');
 let scissors = new Imgobject ('scissors','assets/scissors.jpg');
@@ -39,7 +39,7 @@ let imgSpot = document.getElementById('imgSpot');
 let listSpot = document.getElementById('list');
 let buttonSpot = document.getElementById('button');
 let chartSpot = document.getElementById('chart')
-let y = 0      ;
+let y = 0;
 
 
 function showResults () {
@@ -98,32 +98,46 @@ function randNumb () {
     return Math.floor((Math.random() * (imgArray.length)));
 }
 
-// repeatImg.length = 0;
 
+let repeatImg = [];
 
 function displayImg () {
-    let x = -1;
-    let repeatImg = [];
     for (let i = 0; i < 3; i++) {
-        x++
         let imgNumb = randNumb()
-        // while (imgNumb == repeatImg[0] || imgNumb == repeatImg[1]) {
-        //     let imgNumb = randNumb();
-        // }
-        // repeatImg.push(imgNumb);
+        repeatImg.push(imgNumb);
+        let x = 0;
+        
+        for (let j = 0; j < repeatImg.length; j++) {
+            while (repeatImg[j] == repeatImg[i]) {
+                repeatImg.pop();
+                let imgNumb = randNumb()
+                repeatImg.push(imgNumb);
+                x++
+                if (x > 50) {
+                    console.log('broke');
+                    break;
+                }
+            }
+        }
+
+        while (repeatImg.length > 6) {
+            repeatImg.shift();
+        }; 
         let addImg = document.createElement('button');
-        addImg.innerHTML = '<img src=' + imgArray[imgNumb].filePath + '>';
-        addImg.id = imgNumb;
+        addImg.innerHTML = '<img src=' + imgArray[repeatImg[i]].filePath + '>';
+        addImg.id = repeatImg[i];
         imgSpot.appendChild(addImg);
-        imgArray[imgNumb].timesShown++;
-        let getImgId = document.getElementById(imgNumb);
+        imgArray[repeatImg[i]].timesShown++;
+        let getImgId = document.getElementById(repeatImg[i]);
         getImgId.addEventListener('click', function() {
-            imgArray[imgNumb].timesClicked++
+            imgArray[repeatImg[i]].timesClicked++
             imgSpot.innerHTML = ''; 
-            y++;  
+            y++;
             displayImg();  
         })
     }
+    }
+
     if (y == 2) { // shows results in list form
     let makeButton = document.createElement('button');
     makeButton.innerHTML = 'Results';
@@ -134,10 +148,8 @@ function displayImg () {
         showResults();
         myChart();
     });
-
     };
-        
-}
+
 
 displayImg()
 
