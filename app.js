@@ -39,8 +39,9 @@ let imgSpot = document.getElementById('imgSpot');
 let listSpot = document.getElementById('list');
 let buttonSpot = document.getElementById('button');
 let chartSpot = document.getElementById('chart')
+let chartParent = document.getElementsByClassName('chartGoesHere');
 let y = 0;
-
+let repeatImg = [];
 
 function showResults () {
     listSpot.innerHTML = ''
@@ -50,6 +51,7 @@ function showResults () {
         listSpot.appendChild(createList);
     }
 }
+
 
 function myChart () {
     let createChart = document.getElementById('chart').getContext('2d');
@@ -89,56 +91,45 @@ function myChart () {
           },
     });
 
-    // chartSpot.appendChild(createChart);
+
     console.log(myChart);
 }
-
 
 function randNumb () {
     return Math.floor((Math.random() * (imgArray.length)));
 }
 
-
-let repeatImg = [];
-
 function displayImg () {
-    for (let i = 0; i < 3; i++) {
-        let imgNumb = randNumb()
-        repeatImg.push(imgNumb);
-        let x = 0;
-        
-        for (let j = 0; j < repeatImg.length; j++) {
-            while (repeatImg[j] == repeatImg[i]) {
-                repeatImg.pop();
-                let imgNumb = randNumb()
-                repeatImg.push(imgNumb);
-                x++
-                if (x > 50) {
-                    console.log('broke');
-                    break;
-                }
-            }
-        }
 
-        while (repeatImg.length > 6) {
-            repeatImg.shift();
-        }; 
+    while (repeatImg.length > 3) {
+        repeatImg.shift()
+    }
+
+    while (repeatImg.length < 6) {
+        let imgNumb = randNumb();
+        if (!repeatImg.includes(imgNumb)) {
+            repeatImg.push(imgNumb);
+        }
+    }
+    
+    for (let i = 0; i < 3; i++) {
+        
         let addImg = document.createElement('button');
-        addImg.innerHTML = '<img src=' + imgArray[repeatImg[i]].filePath + '>';
-        addImg.id = repeatImg[i];
+        addImg.innerHTML = '<img src=' + imgArray[repeatImg[i + 3]].filePath + '>';
+        addImg.id = repeatImg[i + 3];
         imgSpot.appendChild(addImg);
-        imgArray[repeatImg[i]].timesShown++;
-        let getImgId = document.getElementById(repeatImg[i]);
+        imgArray[repeatImg[i + 3]].timesShown++;
+        let getImgId = document.getElementById(repeatImg[i + 3]);
         getImgId.addEventListener('click', function() {
-            imgArray[repeatImg[i]].timesClicked++
+            imgArray[repeatImg[i + 3]].timesClicked++
             imgSpot.innerHTML = ''; 
             y++;
             displayImg();  
         })
     }
-    }
 
-    if (y == 2) { // shows results in list form
+    
+    if (y == 25) { // shows results in list form
     let makeButton = document.createElement('button');
     makeButton.innerHTML = 'Results';
     makeButton.id = 'results'
@@ -149,7 +140,7 @@ function displayImg () {
         myChart();
     });
     };
-
+}
 
 displayImg()
 
