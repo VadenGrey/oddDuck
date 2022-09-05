@@ -137,6 +137,7 @@ function displayImg () {
     getButton.addEventListener('click', function () {
         showResults();
         myChart();
+        localStorage.setItem('myChart', myChart);
     });
     };
 }
