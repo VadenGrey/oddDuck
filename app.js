@@ -128,7 +128,6 @@ function displayImg () {
         })
     }
 
-    
     if (y == 25) { // shows results in list form
     let makeButton = document.createElement('button');
     makeButton.innerHTML = 'Results';
