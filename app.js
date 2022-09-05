@@ -20,7 +20,7 @@ let bubblegum = new Imgobject ('bubblegum', 'assets/bubblegum.jpg');
 let chair = new Imgobject ('chair','assets/chair.jpg');
 let cthulhu = new Imgobject ('cthulhu','assets/cthulhu.jpg');
 let dogduck = new Imgobject ('dogduck','assets/dog-duck.jpg');
-let dragon = new Imgobject ('dragon','assets/bag.jpg');
+let dragon = new Imgobject ('dragon','assets/dragon.jpg');
 let pen = new Imgobject ('pen','assets/pen.jpg');
 let petsweep = new Imgobject ('petsweep','assets/pet-sweep.jpg');
 let scissors = new Imgobject ('scissors','assets/scissors.jpg');
@@ -39,8 +39,9 @@ let imgSpot = document.getElementById('imgSpot');
 let listSpot = document.getElementById('list');
 let buttonSpot = document.getElementById('button');
 let chartSpot = document.getElementById('chart')
-let y = 0      ;
-
+let chartParent = document.getElementsByClassName('chartGoesHere');
+let y = 0;
+let repeatImg = [];
 
 function showResults () {
     listSpot.innerHTML = ''
@@ -50,6 +51,7 @@ function showResults () {
         listSpot.appendChild(createList);
     }
 }
+
 
 function myChart () {
     let createChart = document.getElementById('chart').getContext('2d');
@@ -89,41 +91,43 @@ function myChart () {
           },
     });
 
-    // chartSpot.appendChild(createChart);
+
     console.log(myChart);
 }
-
 
 function randNumb () {
     return Math.floor((Math.random() * (imgArray.length)));
 }
 
-// repeatImg.length = 0;
-
-
 function displayImg () {
-    let x = -1;
-    let repeatImg = [];
+
+    while (repeatImg.length > 3) {
+        repeatImg.shift()
+    }
+
+    while (repeatImg.length < 6) {
+        let imgNumb = randNumb();
+        if (!repeatImg.includes(imgNumb)) {
+            repeatImg.push(imgNumb);
+        }
+    }
+    
     for (let i = 0; i < 3; i++) {
-        x++
-        let imgNumb = randNumb()
-        // while (imgNumb == repeatImg[0] || imgNumb == repeatImg[1]) {
-        //     let imgNumb = randNumb();
-        // }
-        // repeatImg.push(imgNumb);
+        
         let addImg = document.createElement('button');
-        addImg.innerHTML = '<img src=' + imgArray[imgNumb].filePath + '>';
-        addImg.id = imgNumb;
+        addImg.innerHTML = '<img src=' + imgArray[repeatImg[i + 3]].filePath + '>';
+        addImg.id = repeatImg[i + 3];
         imgSpot.appendChild(addImg);
-        imgArray[imgNumb].timesShown++;
-        let getImgId = document.getElementById(imgNumb);
+        imgArray[repeatImg[i + 3]].timesShown++;
+        let getImgId = document.getElementById(repeatImg[i + 3]);
         getImgId.addEventListener('click', function() {
-            imgArray[imgNumb].timesClicked++
+            imgArray[repeatImg[i + 3]].timesClicked++
             imgSpot.innerHTML = ''; 
-            y++;  
+            y++;
             displayImg();  
         })
     }
+
     if (y == 25) { // shows results in list form
     let makeButton = document.createElement('button');
     makeButton.innerHTML = 'Results';
@@ -134,9 +138,7 @@ function displayImg () {
         showResults();
         myChart();
     });
-
     };
-        
 }
 
 displayImg()
